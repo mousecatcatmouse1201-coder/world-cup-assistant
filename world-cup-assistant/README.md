@@ -247,3 +247,51 @@ vercel dev
 ```
 
 然后访问本地的 `/api/matches` 检查 Serverless API。
+
+## 第五阶段：自动更新赛程数据
+
+项目使用 GitHub Actions 每天自动运行数据更新脚本。workflow 文件位于仓库根目录：
+
+```text
+.github/workflows/update-matches.yml
+```
+
+它会在每天北京时间上午 9 点运行一次，对应 GitHub Actions 使用的 UTC 时间上午 1 点。也可以在 GitHub 页面手动运行。
+
+### 配置 GitHub Secrets
+
+1. 打开 GitHub 仓库。
+2. 进入 **Settings → Secrets and variables → Actions**。
+3. 点击 **New repository secret**。
+4. 添加 `API_FOOTBALL_KEY`，值为真实 API Key。
+5. 添加 `API_FOOTBALL_HOST`，值为 `v3.football.api-sports.io`。
+
+不要把真实 API Key 写入 workflow、README、前端代码或提交到 GitHub。
+
+### 手动运行 workflow
+
+1. 打开 GitHub 仓库的 **Actions** 页面。
+2. 选择 **Update World Cup Matches**。
+3. 点击 **Run workflow**。
+4. 选择 `main` 分支并确认运行。
+
+workflow 会进入 `world-cup-assistant` 目录，运行：
+
+```bash
+npm install
+npm run fetch:matches
+```
+
+如果 `data/matches.json` 有变化，GitHub Actions 会自动创建并推送以下提交：
+
+```text
+chore: update world cup matches data
+```
+
+如果数据没有变化，则不会创建空提交。如果 API 请求失败、Key 缺失或返回数据为空，`fetch-matches.js` 会保留现有的 `data/matches.json`，并让本次 workflow 显示失败，便于检查原因。
+
+### 查看运行和部署结果
+
+在 GitHub 仓库的 **Actions** 页面可以查看每次运行状态和各步骤日志。成功更新后，可以在仓库提交记录中确认自动提交，并打开 `data/matches.json` 检查内容。
+
+Vercel 已连接 GitHub。自动提交推送到 GitHub 后，会触发新的 Vercel 部署。可以进入 Vercel 项目的 **Deployments** 页面，确认最新部署关联了自动更新提交，并在部署完成后访问线上首页和 `/api/matches` 验收数据。
