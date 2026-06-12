@@ -72,6 +72,7 @@ const elements = {
   groupFilter: document.querySelector("#group-filter"),
   statusFilter: document.querySelector("#status-filter"),
   resetFilters: document.querySelector("#reset-filters"),
+  dataSource: document.querySelector("#data-source"),
   errorMessage: document.querySelector("#error-message")
 };
 
@@ -79,13 +80,14 @@ init();
 
 async function init() {
   try {
-    const [matches, teams] = await Promise.all([
-      loadJson("data/matches.json", FALLBACK_MATCHES),
+    const [matchResult, teams] = await Promise.all([
+      loadMatches(),
       loadJson("data/teams.json", FALLBACK_TEAMS)
     ]);
 
-    state.matches = matches;
+    state.matches = matchResult.matches;
     state.teams = teams;
+    elements.dataSource.textContent = `数据来源：${matchResult.sourceLabel}`;
     populateFilters();
     bindEvents();
     renderAll();
@@ -93,6 +95,36 @@ async function init() {
     elements.errorMessage.hidden = false;
     elements.errorMessage.textContent = `数据加载失败：${error.message}`;
   }
+}
+
+async function loadMatches() {
+  const isPythonStaticPreview =
+    ["localhost", "127.0.0.1"].includes(window.location.hostname) &&
+    window.location.port === "8000";
+  const shouldRequestApi =
+    window.location.protocol !== "file:" && !isPythonStaticPreview;
+
+  if (shouldRequestApi) {
+    try {
+      const response = await fetch("/api/matches");
+      if (!response.ok) throw new Error("API 请求失败");
+
+      const data = await response.json();
+      if (!Array.isArray(data.matches)) {
+        throw new Error("API 数据格式异常");
+      }
+
+      return {
+        matches: data.matches,
+        sourceLabel: data.source === "api" ? "API" : "本地缓存"
+      };
+    } catch {
+      // 普通静态服务器没有 /api/matches 时，继续读取本地 JSON。
+    }
+  }
+
+  const matches = await loadJson("data/matches.json", FALLBACK_MATCHES);
+  return { matches, sourceLabel: "本地缓存" };
 }
 
 async function loadJson(path, fallbackData) {

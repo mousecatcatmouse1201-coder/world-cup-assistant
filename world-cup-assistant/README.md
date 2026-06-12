@@ -189,3 +189,61 @@ git push -u origin main
 8. 刷新页面后，关注球队和收藏比赛不会丢失。
 9. 小组积分榜显示正常。
 10. 浏览器控制台没有错误或警告。
+
+## 第四阶段：Vercel API 接口
+
+项目新增了 `/api/matches` Serverless API。前端会优先请求这个接口获取赛程；如果接口不可用，则自动读取 `data/matches.json`，因此普通静态预览仍然可以正常使用。
+
+### 接口返回内容
+
+访问：
+
+```text
+https://你的域名/api/matches
+```
+
+接口会返回：
+
+```json
+{
+  "source": "api",
+  "updatedAt": "2026-06-12T12:00:00.000Z",
+  "count": 104,
+  "matches": []
+}
+```
+
+查看 `source` 可以判断数据来源：
+
+- `api`：数据来自 API-FOOTBALL。
+- `local-fallback`：未配置 API Key、第三方请求失败或数据异常，接口使用了本地 `data/matches.json`。
+
+只有本地 JSON 也无法读取时，接口才会返回 HTTP 500。
+
+### 在 Vercel 配置环境变量
+
+1. 打开 Vercel 项目。
+2. 进入 **Settings → Environment Variables**。
+3. 添加 `API_FOOTBALL_KEY`，值为你的真实 API Key。
+4. 添加 `API_FOOTBALL_HOST`，值为 `v3.football.api-sports.io`。
+5. 保存后重新部署项目。
+
+API Key 只保存在 Vercel 环境变量中。不要把它写入前端、README、`.env.example` 或 GitHub 仓库。
+
+### 本地测试
+
+使用普通静态服务器：
+
+```bash
+python3 -m http.server 8000
+```
+
+本地没有 `/api/matches` 时，前端会自动回退到 `data/matches.json`。
+
+如果安装了 Vercel CLI，也可以运行：
+
+```bash
+vercel dev
+```
+
+然后访问本地的 `/api/matches` 检查 Serverless API。
