@@ -1,0 +1,9 @@
+{
+  "name": "world-cup-assistant",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "fetch:matches": "node scripts/fetch-matches.js"
+  }
+}

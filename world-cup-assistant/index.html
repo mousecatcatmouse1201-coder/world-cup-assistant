@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="查看 2026 世界杯模拟赛程、关注球队、收藏比赛并浏览小组积分榜。"
+    />
+    <title>2026 世界杯观赛助手</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <p class="eyebrow">WORLD CUP 2026</p>
+        <h1>2026 世界杯观赛助手</h1>
+        <p class="header-description">
+          查看赛程、关注球队、收藏比赛。所有比赛时间均显示为北京时间。
+        </p>
+      </div>
+    </header>
+
+    <main class="container page-content">
+      <section class="section" aria-labelledby="followed-matches-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">首页</p>
+            <h2 id="followed-matches-title">我关注球队的比赛</h2>
+          </div>
+          <span class="count-badge" id="followed-match-count">0 场</span>
+        </div>
+        <div class="match-grid" id="followed-matches"></div>
+      </section>
+
+      <section class="section filter-panel" aria-labelledby="filter-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">查找比赛</p>
+            <h2 id="filter-title">赛程筛选</h2>
+          </div>
+          <button class="text-button" id="reset-filters" type="button">重置筛选</button>
+        </div>
+
+        <div class="filter-grid">
+          <label>
+            按球队
+            <select id="team-filter">
+              <option value="all">全部球队</option>
+            </select>
+          </label>
+
+          <label>
+            按小组
+            <select id="group-filter">
+              <option value="all">全部小组</option>
+            </select>
+          </label>
+
+          <label>
+            按比赛状态
+            <select id="status-filter">
+              <option value="all">全部状态</option>
+              <option value="upcoming">未开始</option>
+              <option value="live">进行中</option>
+              <option value="finished">已结束</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="all-matches-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">赛程</p>
+            <h2 id="all-matches-title">全部赛程</h2>
+          </div>
+          <span class="count-badge" id="match-count">0 场</span>
+        </div>
+        <div class="match-grid" id="all-matches"></div>
+      </section>
+
+      <section class="section" aria-labelledby="standings-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">数据</p>
+            <h2 id="standings-title">小组积分榜</h2>
+          </div>
+          <p class="section-note">根据已结束比赛自动计算</p>
+        </div>
+        <div class="standings-list" id="standings"></div>
+      </section>
+
+      <section class="section" aria-labelledby="favorites-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">本地保存</p>
+            <h2 id="favorites-title">我的关注</h2>
+          </div>
+          <p class="section-note">刷新页面后仍会保留</p>
+        </div>
+
+        <div class="favorites-layout">
+          <div class="card">
+            <h3>关注球队</h3>
+            <p class="muted">点击球队按钮即可关注或取消关注。</p>
+            <div class="team-list" id="team-list"></div>
+          </div>
+
+          <div class="card">
+            <h3>收藏比赛</h3>
+            <div class="favorite-match-list" id="favorite-matches"></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="error-message" id="error-message" role="alert" hidden></div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">第一阶段使用模拟数据，不代表真实赛程。</div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

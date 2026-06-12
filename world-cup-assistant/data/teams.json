@@ -1,0 +1,14 @@
+[
+  { "name": "Mexico", "nameZh": "墨西哥", "group": "A" },
+  { "name": "South Africa", "nameZh": "南非", "group": "A" },
+  { "name": "Canada", "nameZh": "加拿大", "group": "A" },
+  { "name": "Japan", "nameZh": "日本", "group": "A" },
+  { "name": "Argentina", "nameZh": "阿根廷", "group": "B" },
+  { "name": "Morocco", "nameZh": "摩洛哥", "group": "B" },
+  { "name": "Denmark", "nameZh": "丹麦", "group": "B" },
+  { "name": "Australia", "nameZh": "澳大利亚", "group": "B" },
+  { "name": "France", "nameZh": "法国", "group": "C" },
+  { "name": "Brazil", "nameZh": "巴西", "group": "C" },
+  { "name": "South Korea", "nameZh": "韩国", "group": "C" },
+  { "name": "United States", "nameZh": "美国", "group": "C" }
+]
