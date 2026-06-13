@@ -331,7 +331,7 @@ function renderFollowedMatches() {
 
   const emptyText =
     state.followedTeams.length === 0
-      ? "你还没有关注球队，可以在下方选择球队"
+      ? "你还没有关注球队，可以在上方选择球队"
       : "目前没有关注球队的比赛。";
 
   renderMatchCards(matches, elements.followedMatches, emptyText);

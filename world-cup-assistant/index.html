@@ -8,7 +8,7 @@
       content="查看 2026 世界杯公开赛程、关注球队、收藏比赛并浏览小组积分榜。"
     />
     <title>2026 世界杯观赛助手</title>
-    <link rel="stylesheet" href="style.css?v=6" />
+    <link rel="stylesheet" href="style.css?v=7" />
   </head>
   <body>
     <header class="site-header">
@@ -42,25 +42,21 @@
         </div>
       </section>
 
-      <section class="section" aria-labelledby="next-match-title">
+      <section
+        class="section follow-team-panel"
+        aria-labelledby="follow-team-title"
+      >
         <div class="section-heading">
           <div>
-            <p class="section-label">即将开赛</p>
-            <h2 id="next-match-title">下一场比赛</h2>
+            <p class="section-label">快捷设置</p>
+            <h2 id="follow-team-title">关注球队</h2>
           </div>
+          <p class="section-note">刷新页面后仍会保留</p>
         </div>
-        <div id="next-match"></div>
-      </section>
-
-      <section class="section" aria-labelledby="followed-matches-title">
-        <div class="section-heading">
-          <div>
-            <p class="section-label">首页</p>
-            <h2 id="followed-matches-title">我的关注比赛</h2>
-          </div>
-          <span class="count-badge" id="followed-match-count">0 场</span>
-        </div>
-        <div class="match-grid" id="followed-matches"></div>
+        <p class="muted">
+          选择你关注的球队，系统会优先展示相关比赛。
+        </p>
+        <div class="team-list" id="team-list"></div>
       </section>
 
       <section class="section filter-panel" aria-labelledby="filter-title">
@@ -103,12 +99,33 @@
             <input id="followed-only-filter" type="checkbox" />
             <span>
               <strong>只看我关注球队</strong>
-              <small>根据“我的关注”选择筛选</small>
+              <small>根据“关注球队”中的选择筛选</small>
             </span>
           </label>
         </div>
 
         <div class="filter-summary" id="filter-summary" aria-live="polite"></div>
+      </section>
+
+      <section class="section" aria-labelledby="next-match-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">即将开赛</p>
+            <h2 id="next-match-title">下一场比赛</h2>
+          </div>
+        </div>
+        <div id="next-match"></div>
+      </section>
+
+      <section class="section" aria-labelledby="followed-matches-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">首页</p>
+            <h2 id="followed-matches-title">我的关注比赛</h2>
+          </div>
+          <span class="count-badge" id="followed-match-count">0 场</span>
+        </div>
+        <div class="match-grid" id="followed-matches"></div>
       </section>
 
       <section class="section" aria-labelledby="all-matches-title">
@@ -140,22 +157,13 @@
         <div class="section-heading">
           <div>
             <p class="section-label">本地保存</p>
-            <h2 id="favorites-title">我的关注</h2>
+            <h2 id="favorites-title">收藏比赛</h2>
           </div>
           <p class="section-note">刷新页面后仍会保留</p>
         </div>
 
-        <div class="favorites-layout">
-          <div class="card">
-            <h3>关注球队</h3>
-            <p class="muted">点击球队按钮即可关注或取消关注。</p>
-            <div class="team-list" id="team-list"></div>
-          </div>
-
-          <div class="card">
-            <h3>收藏比赛</h3>
-            <div class="favorite-match-list" id="favorite-matches"></div>
-          </div>
+        <div class="card">
+          <div class="favorite-match-list" id="favorite-matches"></div>
         </div>
       </section>
     </main>
@@ -166,6 +174,6 @@
       </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=7"></script>
   </body>
 </html>

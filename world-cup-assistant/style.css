@@ -155,6 +155,7 @@ button {
 }
 
 .filter-panel,
+.follow-team-panel,
 .card,
 .standings-card {
   padding: 22px;
@@ -162,6 +163,15 @@ button {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+}
+
+.follow-team-panel {
+  background: linear-gradient(135deg, #ffffff, var(--surface-soft));
+  border-color: #c9e2d8;
+}
+
+.follow-team-panel .section-heading {
+  margin-bottom: 8px;
 }
 
 .filter-grid {
@@ -447,10 +457,18 @@ button:focus-visible {
   font-weight: 700;
 }
 
+.team-button {
+  min-height: 38px;
+  padding: 7px 10px;
+  font-size: 0.84rem;
+}
+
 .favorite-button.active,
 .team-button.active {
   color: white;
   background: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 3px 10px rgba(8, 127, 91, 0.18);
 }
 
 .standings-list {
@@ -522,17 +540,11 @@ tbody tr:last-child td {
   font-size: 0.78rem;
 }
 
-.favorites-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-}
-
 .team-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 18px;
+  gap: 8px;
+  margin-top: 16px;
 }
 
 .favorite-match-list {
@@ -600,7 +612,6 @@ tbody tr:last-child td {
 
   .filter-grid,
   .match-grid,
-  .favorites-layout,
   .next-match-card {
     grid-template-columns: 1fr;
   }
@@ -639,6 +650,7 @@ tbody tr:last-child td {
   }
 
   .filter-panel,
+  .follow-team-panel,
   .card,
   .standings-card,
   .match-card {
@@ -656,8 +668,17 @@ tbody tr:last-child td {
     gap: 8px;
   }
 
-  .favorite-button,
-  .team-button {
+  .favorite-button {
     min-height: 46px;
+  }
+
+  .team-list {
+    gap: 7px;
+  }
+
+  .team-button {
+    min-height: 42px;
+    padding: 7px 9px;
+    font-size: 0.8rem;
   }
 }
