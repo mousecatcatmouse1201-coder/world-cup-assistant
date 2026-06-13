@@ -86,7 +86,7 @@ async function init() {
     ]);
 
     state.matches = matchResult.matches;
-    state.teams = teams;
+    state.teams = mergeTeamsWithMatches(teams, state.matches);
     elements.dataSource.textContent = `数据来源：${matchResult.sourceLabel}`;
     populateFilters();
     bindEvents();
@@ -116,7 +116,7 @@ async function loadMatches() {
 
       return {
         matches: data.matches,
-        sourceLabel: data.source === "api" ? "API" : "本地缓存"
+        sourceLabel: data.source === "local-json" ? "本地 JSON" : "本地缓存"
       };
     } catch {
       // 普通静态服务器没有 /api/matches 时，继续读取本地 JSON。
@@ -149,6 +149,34 @@ function readStoredArray(key) {
   }
 }
 
+function mergeTeamsWithMatches(teams, matches) {
+  const chineseNames = new Map(
+    teams.map((team) => [team.name, team.nameZh || team.name])
+  );
+  const teamMap = new Map();
+
+  matches
+    .filter((match) => /^[A-Z]$/.test(match.group))
+    .forEach((match) => {
+      [
+        [match.homeTeam, match.homeTeamZh],
+        [match.awayTeam, match.awayTeamZh]
+      ].forEach(([name, nameZh]) => {
+        teamMap.set(name, {
+          name,
+          nameZh: chineseNames.get(name) || nameZh || name,
+          group: match.group
+        });
+      });
+    });
+
+  return [...teamMap.values()].sort(
+    (a, b) =>
+      String(a.group).localeCompare(String(b.group)) ||
+      a.name.localeCompare(b.name)
+  );
+}
+
 function saveStoredArray(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
@@ -161,11 +189,11 @@ function populateFilters() {
     elements.teamFilter.append(option);
   });
 
-  const groups = [...new Set(state.teams.map((team) => team.group))].sort();
+  const groups = [...new Set(state.matches.map((match) => match.group))].sort();
   groups.forEach((group) => {
     const option = document.createElement("option");
     option.value = group;
-    option.textContent = `${group} 组`;
+    option.textContent = /^[A-Z]$/.test(group) ? `${group} 组` : group;
     elements.groupFilter.append(option);
   });
 }
@@ -389,7 +417,13 @@ function renderFavoriteMatches() {
 }
 
 function renderStandings() {
-  const groups = [...new Set(state.teams.map((team) => team.group))].sort();
+  const groups = [
+    ...new Set(
+      state.matches
+        .map((match) => match.group)
+        .filter((group) => /^[A-Z]$/.test(group))
+    )
+  ].sort();
 
   elements.standings.innerHTML = groups
     .map((group) => {

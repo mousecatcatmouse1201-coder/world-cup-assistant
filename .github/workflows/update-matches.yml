@@ -27,9 +27,6 @@ jobs:
           npm install
 
       - name: Fetch latest matches
-        env:
-          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
-          API_FOOTBALL_HOST: ${{ secrets.API_FOOTBALL_HOST }}
         run: |
           cd world-cup-assistant
           npm run fetch:matches
@@ -44,5 +41,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add world-cup-assistant/data/matches.json
-          git commit -m "chore: update world cup matches data"
+          git commit -m "chore: update world cup matches data from openfootball"
           git push

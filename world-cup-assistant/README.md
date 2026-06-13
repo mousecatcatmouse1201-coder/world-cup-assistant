@@ -2,22 +2,23 @@
 
 这是一个适合初学者阅读和修改的纯前端项目。第一阶段只使用 HTML、CSS、JavaScript、本地 JSON 和浏览器 `localStorage`。
 
-> 注意：项目中的球队分组、比赛时间、场地和比分均为学习用模拟数据，不代表真实赛程。
+> 注意：赛程数据来自 OpenFootball 社区维护的公开 JSON，不是实时比分服务，内容可能滞后或调整。
 
 ## 项目文件
 
 ```text
 world-cup-assistant/
-├── .env.example        API 环境变量示例
+├── .env.example        未来环境配置的备用说明
 ├── .gitignore          Git 忽略规则
 ├── index.html          页面结构和主要区域
 ├── package.json        Node.js 项目配置和脚本命令
 ├── style.css           页面样式和手机端适配
 ├── script.js           数据加载、筛选、收藏、关注和积分榜计算
 ├── scripts/
-│   └── fetch-matches.js 从 API 获取并转换世界杯赛程
+│   ├── fetch-matches.js 从 OpenFootball 获取世界杯赛程
+│   └── match-normalizer.js 转换 OpenFootball 数据格式
 ├── data/
-│   ├── matches.json    模拟比赛数据
+│   ├── matches.json    前端直接读取的比赛数据
 │   └── teams.json      球队中英文名称和小组数据
 └── README.md           项目说明和测试方法
 ```
@@ -47,7 +48,7 @@ http://localhost:8000
 ## 测试清单
 
 1. 页面顶部能看到“2026 世界杯观赛助手”。
-2. “全部赛程”区域能看到 12 张比赛卡片。
+2. “全部赛程”区域能看到从当前 JSON 读取的比赛卡片。
 3. 分别使用球队、小组、比赛状态筛选，比赛数量会随之变化。
 4. 在“我的关注”中点击一个球队，首页会优先显示该球队的比赛。
 5. 在比赛卡片中点击“收藏比赛”，该比赛会出现在“收藏比赛”区域。
@@ -63,7 +64,15 @@ http://localhost:8000
 
 ## 第二阶段：更新赛程数据
 
-更新脚本会请求 API-FOOTBALL 的 2026 世界杯赛程，并将结果转换成网页可以直接读取的 `data/matches.json` 格式。
+更新脚本会请求 OpenFootball 的 2026 世界杯公开 JSON，并将结果转换成网页可以直接读取的 `data/matches.json` 格式。
+
+数据源：
+
+```text
+https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json
+```
+
+OpenFootball 提供免费、无需 API Key 的公共领域 JSON 数据，但不是实时比分服务，数据依赖社区维护和定期更新。
 
 ### 1. 安装依赖
 
@@ -75,24 +84,7 @@ npm install
 
 当前脚本只使用 Node.js 内置功能，没有额外的第三方依赖。运行 `npm install` 仍可帮助你确认 Node.js 项目配置正常。
 
-### 2. 创建 `.env`
-
-复制环境变量示例文件：
-
-```bash
-cp .env.example .env
-```
-
-然后打开 `.env`，把 `your_api_key_here` 替换为你在 API-SPORTS 后台获得的 API Key：
-
-```text
-API_FOOTBALL_KEY=你的真实_API_Key
-API_FOOTBALL_HOST=v3.football.api-sports.io
-```
-
-`.env` 已加入 `.gitignore`，不会被 Git 提交。不要把真实 API Key 写进 JavaScript 文件或分享给其他人。
-
-### 3. 更新比赛数据
+### 2. 更新比赛数据
 
 运行：
 
@@ -102,18 +94,17 @@ npm run fetch:matches
 
 成功时，终端会显示请求成功、转换比赛数量以及保存路径。重新启动本地服务器或刷新网页后，即可读取更新后的赛程。
 
-### 4. 请求失败时
+### 3. 请求失败时
 
-如果 API Key 缺失、请求失败、API 返回错误或比赛数据为空，脚本会输出失败原因，并保留原来的 `data/matches.json`，不会用空数据覆盖它。
-
-即使没有 API Key，网页仍然可以读取现有的本地 JSON 数据并正常使用。
+如果 OpenFootball 请求失败、返回空数据或转换失败，脚本会输出失败原因，并保留原来的 `data/matches.json`，不会用空数据覆盖它。
 
 常见检查方法：
 
-1. 确认 `.env` 文件位于项目根目录。
-2. 确认 `API_FOOTBALL_KEY` 没有多余空格或引号。
-3. 确认网络连接正常，并检查 API-SPORTS 账户的请求额度。
-4. 再次运行 `npm run fetch:matches`。
+1. 确认网络可以访问 GitHub Raw。
+2. 在浏览器中检查上面的 OpenFootball 数据源地址。
+3. 再次运行 `npm run fetch:matches`。
+
+当前方案不使用 `.env` 或 API Key。`.gitignore` 仍保留 `.env`，作为良好的安全习惯。
 
 ## 第三阶段：Vercel 部署说明
 
@@ -135,13 +126,11 @@ http://localhost:8000
 
 ### 更新赛程数据
 
-如果已经创建 `.env` 并填写了有效 API Key，可以运行：
+更新本地赛程可以运行：
 
 ```bash
 npm run fetch:matches
 ```
-
-没有 API Key 时不要运行更新命令，网页仍会使用现有的 `data/matches.json`。
 
 ### 部署前检查
 
@@ -192,7 +181,7 @@ git push -u origin main
 
 ## 第四阶段：Vercel API 接口
 
-项目新增了 `/api/matches` Serverless API。前端会优先请求这个接口获取赛程；如果接口不可用，则自动读取 `data/matches.json`，因此普通静态预览仍然可以正常使用。
+项目提供 `/api/matches` Serverless API。接口稳定读取已提交的 `data/matches.json`，不会在用户访问网页时请求 OpenFootball。前端会优先请求这个接口；如果接口不可用，则自动读取静态的 `data/matches.json`。
 
 ### 接口返回内容
 
@@ -206,29 +195,16 @@ https://你的域名/api/matches
 
 ```json
 {
-  "source": "api",
+  "source": "local-json",
   "updatedAt": "2026-06-12T12:00:00.000Z",
   "count": 104,
   "matches": []
 }
 ```
 
-查看 `source` 可以判断数据来源：
+`source: "local-json"` 表示接口读取的是项目内的 `data/matches.json`。
 
-- `api`：数据来自 API-FOOTBALL。
-- `local-fallback`：未配置 API Key、第三方请求失败或数据异常，接口使用了本地 `data/matches.json`。
-
-只有本地 JSON 也无法读取时，接口才会返回 HTTP 500。
-
-### 在 Vercel 配置环境变量
-
-1. 打开 Vercel 项目。
-2. 进入 **Settings → Environment Variables**。
-3. 添加 `API_FOOTBALL_KEY`，值为你的真实 API Key。
-4. 添加 `API_FOOTBALL_HOST`，值为 `v3.football.api-sports.io`。
-5. 保存后重新部署项目。
-
-API Key 只保存在 Vercel 环境变量中。不要把它写入前端、README、`.env.example` 或 GitHub 仓库。
+只有本地 JSON 无法读取时，接口才会返回 HTTP 500。当前方案不需要在 Vercel 配置 API Key 或其他数据源环境变量。
 
 ### 本地测试
 
@@ -248,9 +224,11 @@ vercel dev
 
 然后访问本地的 `/api/matches` 检查 Serverless API。
 
-## 第五阶段：自动更新赛程数据
+## 第五阶段：OpenFootball 自动更新赛程数据
 
-项目使用 GitHub Actions 每天自动运行数据更新脚本。workflow 文件位于仓库根目录：
+项目已不再依赖 API-FOOTBALL 或 API Key。GitHub Actions 每天从 OpenFootball 免费公开 JSON 获取赛程，转换后更新 `data/matches.json`。OpenFootball 不是实时比分服务，数据更新频率取决于社区维护。
+
+workflow 文件位于仓库根目录：
 
 ```text
 .github/workflows/update-matches.yml
@@ -258,15 +236,18 @@ vercel dev
 
 它会在每天北京时间上午 9 点运行一次，对应 GitHub Actions 使用的 UTC 时间上午 1 点。也可以在 GitHub 页面手动运行。
 
-### 配置 GitHub Secrets
+自动更新不需要配置 GitHub Secrets。
 
-1. 打开 GitHub 仓库。
-2. 进入 **Settings → Secrets and variables → Actions**。
-3. 点击 **New repository secret**。
-4. 添加 `API_FOOTBALL_KEY`，值为真实 API Key。
-5. 添加 `API_FOOTBALL_HOST`，值为 `v3.football.api-sports.io`。
+### 本地手动更新
 
-不要把真实 API Key 写入 workflow、README、前端代码或提交到 GitHub。
+在项目目录运行：
+
+```bash
+npm install
+npm run fetch:matches
+```
+
+成功后可以查看 `data/matches.json` 的修改时间和内容，或者运行 `git diff -- data/matches.json` 检查变化。
 
 ### 手动运行 workflow
 
@@ -285,10 +266,10 @@ npm run fetch:matches
 如果 `data/matches.json` 有变化，GitHub Actions 会自动创建并推送以下提交：
 
 ```text
-chore: update world cup matches data
+chore: update world cup matches data from openfootball
 ```
 
-如果数据没有变化，则不会创建空提交。如果 API 请求失败、Key 缺失或返回数据为空，`fetch-matches.js` 会保留现有的 `data/matches.json`，并让本次 workflow 显示失败，便于检查原因。
+如果数据没有变化，则不会创建空提交。如果 OpenFootball 请求失败、返回数据为空或转换失败，`fetch-matches.js` 会保留现有的 `data/matches.json`，并让本次 workflow 显示失败，便于检查原因。
 
 ### 查看运行和部署结果
 
