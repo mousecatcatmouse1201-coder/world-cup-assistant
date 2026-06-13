@@ -1,14 +1,85 @@
 [
   { "name": "Mexico", "nameZh": "墨西哥", "group": "A" },
   { "name": "South Africa", "nameZh": "南非", "group": "A" },
-  { "name": "Canada", "nameZh": "加拿大", "group": "A" },
-  { "name": "Japan", "nameZh": "日本", "group": "A" },
-  { "name": "Argentina", "nameZh": "阿根廷", "group": "B" },
-  { "name": "Morocco", "nameZh": "摩洛哥", "group": "B" },
-  { "name": "Denmark", "nameZh": "丹麦", "group": "B" },
-  { "name": "Australia", "nameZh": "澳大利亚", "group": "B" },
-  { "name": "France", "nameZh": "法国", "group": "C" },
+  {
+    "name": "South Korea",
+    "nameZh": "韩国",
+    "group": "A",
+    "aliases": ["Korea Republic"]
+  },
+  {
+    "name": "Czech Republic",
+    "nameZh": "捷克",
+    "group": "A",
+    "aliases": ["Czechia"]
+  },
+  { "name": "Canada", "nameZh": "加拿大", "group": "B" },
+  {
+    "name": "Bosnia & Herzegovina",
+    "nameZh": "波黑",
+    "group": "B",
+    "aliases": ["Bosnia and Herzegovina"]
+  },
+  { "name": "Qatar", "nameZh": "卡塔尔", "group": "B" },
+  { "name": "Switzerland", "nameZh": "瑞士", "group": "B" },
   { "name": "Brazil", "nameZh": "巴西", "group": "C" },
-  { "name": "South Korea", "nameZh": "韩国", "group": "C" },
-  { "name": "United States", "nameZh": "美国", "group": "C" }
+  { "name": "Morocco", "nameZh": "摩洛哥", "group": "C" },
+  { "name": "Haiti", "nameZh": "海地", "group": "C" },
+  { "name": "Scotland", "nameZh": "苏格兰", "group": "C" },
+  {
+    "name": "USA",
+    "nameZh": "美国",
+    "group": "D",
+    "aliases": ["United States", "United States of America"]
+  },
+  { "name": "Paraguay", "nameZh": "巴拉圭", "group": "D" },
+  { "name": "Australia", "nameZh": "澳大利亚", "group": "D" },
+  {
+    "name": "Turkey",
+    "nameZh": "土耳其",
+    "group": "D",
+    "aliases": ["Türkiye", "Turkiye"]
+  },
+  { "name": "Germany", "nameZh": "德国", "group": "E" },
+  {
+    "name": "Curaçao",
+    "nameZh": "库拉索",
+    "group": "E",
+    "aliases": ["Curacao"]
+  },
+  { "name": "Ecuador", "nameZh": "厄瓜多尔", "group": "E" },
+  {
+    "name": "Ivory Coast",
+    "nameZh": "科特迪瓦",
+    "group": "E",
+    "aliases": ["Côte d'Ivoire", "Cote d'Ivoire"]
+  },
+  { "name": "Netherlands", "nameZh": "荷兰", "group": "F" },
+  { "name": "Japan", "nameZh": "日本", "group": "F" },
+  { "name": "Sweden", "nameZh": "瑞典", "group": "F" },
+  { "name": "Tunisia", "nameZh": "突尼斯", "group": "F" },
+  { "name": "Belgium", "nameZh": "比利时", "group": "G" },
+  { "name": "Egypt", "nameZh": "埃及", "group": "G" },
+  { "name": "Iran", "nameZh": "伊朗", "group": "G" },
+  { "name": "New Zealand", "nameZh": "新西兰", "group": "G" },
+  { "name": "Spain", "nameZh": "西班牙", "group": "H" },
+  { "name": "Cape Verde", "nameZh": "佛得角", "group": "H" },
+  { "name": "Saudi Arabia", "nameZh": "沙特阿拉伯", "group": "H" },
+  { "name": "Uruguay", "nameZh": "乌拉圭", "group": "H" },
+  { "name": "France", "nameZh": "法国", "group": "I" },
+  { "name": "Senegal", "nameZh": "塞内加尔", "group": "I" },
+  { "name": "Iraq", "nameZh": "伊拉克", "group": "I" },
+  { "name": "Norway", "nameZh": "挪威", "group": "I" },
+  { "name": "Argentina", "nameZh": "阿根廷", "group": "J" },
+  { "name": "Algeria", "nameZh": "阿尔及利亚", "group": "J" },
+  { "name": "Austria", "nameZh": "奥地利", "group": "J" },
+  { "name": "Jordan", "nameZh": "约旦", "group": "J" },
+  { "name": "Portugal", "nameZh": "葡萄牙", "group": "K" },
+  { "name": "DR Congo", "nameZh": "刚果民主共和国", "group": "K" },
+  { "name": "Uzbekistan", "nameZh": "乌兹别克斯坦", "group": "K" },
+  { "name": "Colombia", "nameZh": "哥伦比亚", "group": "K" },
+  { "name": "England", "nameZh": "英格兰", "group": "L" },
+  { "name": "Croatia", "nameZh": "克罗地亚", "group": "L" },
+  { "name": "Ghana", "nameZh": "加纳", "group": "L" },
+  { "name": "Panama", "nameZh": "巴拿马", "group": "L" }
 ]

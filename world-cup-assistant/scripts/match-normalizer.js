@@ -1,7 +1,23 @@
 function createChineseNameMap(teams) {
-  return new Map(
-    teams.map((team) => [team.name, team.nameZh || team.name])
-  );
+  const chineseNames = new Map();
+
+  teams.forEach((team) => {
+    if (!team.name || !team.nameZh) return;
+    chineseNames.set(normalizeTeamName(team.name), team.nameZh);
+    (team.aliases || []).forEach((alias) => {
+      chineseNames.set(normalizeTeamName(alias), team.nameZh);
+    });
+  });
+
+  return chineseNames;
+}
+
+function normalizeTeamName(name) {
+  return String(name || "").trim().toLocaleLowerCase("en");
+}
+
+function findChineseName(chineseNames, teamName) {
+  return chineseNames.get(normalizeTeamName(teamName)) || "";
 }
 
 export function extractOpenFootballGroup(group, round) {
@@ -117,8 +133,8 @@ export function convertOpenFootballMatches(
           group: extractOpenFootballGroup(item.group, item.round),
           homeTeam,
           awayTeam,
-          homeTeamZh: chineseNames.get(homeTeam) || homeTeam,
-          awayTeamZh: chineseNames.get(awayTeam) || awayTeam,
+          homeTeamZh: findChineseName(chineseNames, homeTeam),
+          awayTeamZh: findChineseName(chineseNames, awayTeam),
           date: parsedDate.value,
           stadium: location,
           city: location,

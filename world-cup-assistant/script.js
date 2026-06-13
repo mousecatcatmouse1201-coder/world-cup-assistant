@@ -167,9 +167,7 @@ function readStoredArray(key) {
 }
 
 function mergeTeamsWithMatches(teams, matches) {
-  const chineseNames = new Map(
-    teams.map((team) => [team.name, team.nameZh || team.name])
-  );
+  const chineseNames = createChineseNameMap(teams);
   const teamMap = new Map();
 
   matches
@@ -181,7 +179,9 @@ function mergeTeamsWithMatches(teams, matches) {
       ].forEach(([name, nameZh]) => {
         teamMap.set(name, {
           name,
-          nameZh: chineseNames.get(name) || nameZh || name,
+          nameZh:
+            chineseNames.get(normalizeTeamName(name)) ||
+            normalizeChineseName(name, nameZh),
           group: match.group
         });
       });
@@ -192,6 +192,38 @@ function mergeTeamsWithMatches(teams, matches) {
       String(a.group).localeCompare(String(b.group)) ||
       a.name.localeCompare(b.name)
   );
+}
+
+function createChineseNameMap(teams) {
+  const chineseNames = new Map();
+
+  teams.forEach((team) => {
+    if (!team.name || !team.nameZh) return;
+    chineseNames.set(normalizeTeamName(team.name), team.nameZh);
+    (team.aliases || []).forEach((alias) => {
+      chineseNames.set(normalizeTeamName(alias), team.nameZh);
+    });
+  });
+
+  return chineseNames;
+}
+
+function normalizeTeamName(name) {
+  return String(name || "").trim().toLocaleLowerCase("en");
+}
+
+function normalizeChineseName(teamName, teamZhName) {
+  const chineseName = String(teamZhName || "").trim();
+  return normalizeTeamName(chineseName) === normalizeTeamName(teamName)
+    ? ""
+    : chineseName;
+}
+
+function formatTeamDisplayName(teamName, teamZhName) {
+  const englishName = String(teamName || "").trim();
+  const chineseName = normalizeChineseName(englishName, teamZhName);
+  if (!englishName) return "";
+  return chineseName ? `${chineseName} ${englishName}` : englishName;
 }
 
 function saveStoredArray(key, value) {
@@ -213,7 +245,7 @@ function populateFilters() {
   state.teams.forEach((team) => {
     const option = document.createElement("option");
     option.value = team.name;
-    option.textContent = `${team.nameZh} ${team.name}`;
+    option.textContent = formatTeamDisplayName(team.name, team.nameZh);
     elements.teamFilter.append(option);
   });
 
@@ -330,13 +362,11 @@ function renderNextMatch() {
       </div>
       <div class="next-match-teams">
         <div>
-          <strong>${nextMatch.homeTeamZh}</strong>
-          <span>${nextMatch.homeTeam}</span>
+          ${teamNameHtml(nextMatch.homeTeam, nextMatch.homeTeamZh)}
         </div>
         <b>VS</b>
         <div>
-          <strong>${nextMatch.awayTeamZh}</strong>
-          <span>${nextMatch.awayTeam}</span>
+          ${teamNameHtml(nextMatch.awayTeam, nextMatch.awayTeamZh)}
         </div>
       </div>
     </article>
@@ -428,12 +458,17 @@ function teamRow(nameZh, name, score) {
   return `
     <div class="team-row">
       <div class="team-name">
-        <strong>${nameZh}</strong>
-        <span>${name}</span>
+        ${teamNameHtml(name, nameZh)}
       </div>
       <span class="score">${score}</span>
     </div>
   `;
+}
+
+function teamNameHtml(teamName, teamZhName) {
+  const chineseName = normalizeChineseName(teamName, teamZhName);
+  if (!chineseName) return `<strong>${teamName}</strong>`;
+  return `<strong>${chineseName}</strong><span>${teamName}</span>`;
 }
 
 function formatBeijingTime(dateString) {
@@ -516,7 +551,7 @@ function renderTeamButtons() {
           data-follow-team="${team.name}"
           aria-pressed="${isFollowed}"
         >
-          ${team.nameZh} ${team.name}
+          ${formatTeamDisplayName(team.name, team.nameZh)}
         </button>
       `;
     })
@@ -539,7 +574,7 @@ function renderFavoriteMatches() {
       (match) => `
         <div class="favorite-summary">
           <div>
-            <p>${match.homeTeamZh} vs ${match.awayTeamZh}</p>
+            <p>${formatTeamDisplayName(match.homeTeam, match.homeTeamZh)} vs ${formatTeamDisplayName(match.awayTeam, match.awayTeamZh)}</p>
             <span>${formatBeijingTime(match.date)} · 北京时间</span>
           </div>
           <button
