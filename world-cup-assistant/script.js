@@ -57,6 +57,7 @@ const state = {
   matches: [],
   teams: [],
   followedOnly: false,
+  scheduleExpanded: false,
   followedTeams: readStoredArray(STORAGE_KEYS.followedTeams),
   favoriteMatches: readStoredArray(STORAGE_KEYS.favoriteMatches).map(String)
 };
@@ -66,11 +67,14 @@ const elements = {
   statusSource: document.querySelector("#status-source"),
   statusUpdatedAt: document.querySelector("#status-updated-at"),
   statusMatchCount: document.querySelector("#status-match-count"),
-  nextMatch: document.querySelector("#next-match"),
   followedMatches: document.querySelector("#followed-matches"),
   followedMatchCount: document.querySelector("#followed-match-count"),
+  followedTeamSummary: document.querySelector("#followed-team-summary"),
+  recentMatches: document.querySelector("#recent-matches"),
+  recentMatchCount: document.querySelector("#recent-match-count"),
   allMatches: document.querySelector("#all-matches"),
   matchCount: document.querySelector("#match-count"),
+  toggleAllMatches: document.querySelector("#toggle-all-matches"),
   standings: document.querySelector("#standings"),
   teamList: document.querySelector("#team-list"),
   favoriteMatches: document.querySelector("#favorite-matches"),
@@ -278,6 +282,12 @@ function bindEvents() {
     elements.statusFilter.value = "all";
     elements.followedOnlyFilter.checked = false;
     state.followedOnly = false;
+    state.scheduleExpanded = false;
+    renderMatches();
+  });
+
+  elements.toggleAllMatches.addEventListener("click", () => {
+    state.scheduleExpanded = !state.scheduleExpanded;
     renderMatches();
   });
 
@@ -296,9 +306,9 @@ function bindEvents() {
 }
 
 function renderAll() {
-  renderNextMatch();
   renderMatches();
   renderFollowedMatches();
+  renderRecentMatches();
   renderTeamButtons();
   renderFavoriteMatches();
   renderStandings();
@@ -322,60 +332,95 @@ function renderMatches() {
     return matchesTeam && matchesGroup && matchesStatus && matchesFollowed;
   });
 
-  renderMatchesByDate(filteredMatches);
-  elements.matchCount.textContent = `${filteredMatches.length} 场`;
-  renderFilterSummary();
+  const sortedMatches = sortMatchesByViewingPriority(filteredMatches);
+  const hasActiveFilters = areFiltersActive();
+  const visibleMatches =
+    hasActiveFilters || state.scheduleExpanded
+      ? sortedMatches
+      : selectCompactScheduleMatches(sortedMatches);
+
+  renderMatchesByDate(visibleMatches);
+  elements.matchCount.textContent = `当前显示：${visibleMatches.length} 场 / 共 ${filteredMatches.length} 场`;
+  elements.toggleAllMatches.hidden = hasActiveFilters;
+  elements.toggleAllMatches.textContent = state.scheduleExpanded
+    ? "收起赛程"
+    : "查看全部赛程";
+  elements.toggleAllMatches.setAttribute(
+    "aria-expanded",
+    String(!hasActiveFilters && state.scheduleExpanded)
+  );
+  renderFilterSummary(visibleMatches.length, filteredMatches.length);
+}
+
+function areFiltersActive() {
+  return (
+    elements.teamFilter.value !== "all" ||
+    elements.groupFilter.value !== "all" ||
+    elements.statusFilter.value !== "all" ||
+    state.followedOnly
+  );
+}
+
+function selectCompactScheduleMatches(matches) {
+  const liveMatches = matches.filter(
+    (match) => normalizeStatus(match.status) === "live"
+  );
+  const upcomingMatches = matches.filter(
+    (match) => normalizeStatus(match.status) === "upcoming"
+  );
+
+  if (upcomingMatches.length > 0) {
+    return [...liveMatches, ...upcomingMatches.slice(0, 8)];
+  }
+
+  return matches.slice(0, 8);
 }
 
 function renderFollowedMatches() {
-  const matches = state.matches.filter(
-    (match) =>
-      state.followedTeams.includes(match.homeTeam) ||
-      state.followedTeams.includes(match.awayTeam)
-  );
-
-  const emptyText =
-    state.followedTeams.length === 0
-      ? "你还没有关注球队，可以在上方选择球队"
-      : "目前没有关注球队的比赛。";
-
-  renderMatchCards(matches, elements.followedMatches, emptyText);
-  elements.followedMatchCount.textContent = `${matches.length} 场`;
-}
-
-function renderNextMatch() {
-  const nextMatch = state.matches
-    .filter(
-      (match) =>
-        normalizeStatus(match.status) === "upcoming" &&
-        !Number.isNaN(new Date(match.date).getTime())
-    )
-    .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
-
-  if (!nextMatch) {
-    elements.nextMatch.innerHTML =
-      '<div class="empty-state">暂无即将开始的比赛</div>';
+  if (state.followedTeams.length === 0) {
+    elements.followedTeamSummary.innerHTML = `
+      <strong>你还没有关注球队</strong>
+      <span>选择你关注的球队后，这里会优先显示相关比赛。</span>
+    `;
+    elements.followedMatchCount.hidden = true;
+    elements.followedMatches.innerHTML = "";
     return;
   }
 
-  elements.nextMatch.innerHTML = `
-    <article class="next-match-card">
-      <div>
-        <span class="next-match-group">${formatGroupName(nextMatch.group)}</span>
-        <p class="next-match-time">${formatBeijingTime(nextMatch.date)}</p>
-        <p class="match-location">${nextMatch.city} · ${nextMatch.stadium}</p>
-      </div>
-      <div class="next-match-teams">
-        <div>
-          ${teamNameHtml(nextMatch.homeTeam, nextMatch.homeTeamZh)}
-        </div>
-        <b>VS</b>
-        <div>
-          ${teamNameHtml(nextMatch.awayTeam, nextMatch.awayTeamZh)}
-        </div>
-      </div>
-    </article>
+  const followedTeamLabels = state.followedTeams.map((teamName) => {
+    const team = state.teams.find((item) => item.name === teamName);
+    return formatTeamDisplayName(teamName, team?.nameZh);
+  });
+  const allMatches = sortMatchesByViewingPriority(
+    state.matches.filter(
+      (match) =>
+        state.followedTeams.includes(match.homeTeam) ||
+        state.followedTeams.includes(match.awayTeam)
+    )
+  );
+  const visibleMatches = allMatches.slice(0, 5);
+
+  elements.followedTeamSummary.innerHTML = `
+    <strong>你关注的球队：</strong>
+    <span>${followedTeamLabels.join("、")}</span>
   `;
+  elements.followedMatchCount.hidden = false;
+  elements.followedMatchCount.textContent = `${allMatches.length} 场相关比赛`;
+  renderMatchCards(
+    visibleMatches,
+    elements.followedMatches,
+    "目前没有关注球队的比赛。"
+  );
+}
+
+function renderRecentMatches() {
+  const recentMatches = selectRecentMatches(state.matches);
+  renderMatchCards(
+    sortMatchesByViewingPriority(recentMatches),
+    elements.recentMatches,
+    "近期暂无比赛"
+  );
+  elements.recentMatchCount.textContent = `${recentMatches.length} 场`;
 }
 
 function renderMatchesByDate(matches) {
@@ -385,22 +430,26 @@ function renderMatchesByDate(matches) {
     return;
   }
 
-  const sortedMatches = [...matches].sort(
-    (a, b) => new Date(a.date) - new Date(b.date)
-  );
   const groups = new Map();
 
-  sortedMatches.forEach((match) => {
+  matches.forEach((match) => {
+    const status = normalizeStatus(match.status);
     const dateLabel = formatBeijingDate(match.date);
-    if (!groups.has(dateLabel)) groups.set(dateLabel, []);
-    groups.get(dateLabel).push(match);
+    const groupKey = `${status}:${dateLabel}`;
+    if (!groups.has(groupKey)) {
+      groups.set(groupKey, {
+        title: `${STATUS_LABELS[status]} · ${dateLabel}`,
+        matches: []
+      });
+    }
+    groups.get(groupKey).matches.push(match);
   });
 
-  elements.allMatches.innerHTML = [...groups.entries()]
+  elements.allMatches.innerHTML = [...groups.values()]
     .map(
-      ([dateLabel, dateMatches]) => `
+      ({ title, matches: dateMatches }) => `
         <section class="date-group">
-          <h3 class="date-heading">${dateLabel}</h3>
+          <h3 class="date-heading">${title}</h3>
           <div class="match-grid">
             ${matchCardsHtml(dateMatches)}
           </div>
@@ -426,24 +475,26 @@ function matchCardsHtml(matches) {
       const isFavorite = state.favoriteMatches.includes(matchId);
       const hasScore = match.homeScore !== null && match.awayScore !== null;
       const displayStatus = normalizeStatus(match.status);
+      const homeName = formatTeamDisplayName(match.homeTeam, match.homeTeamZh);
+      const awayName = formatTeamDisplayName(match.awayTeam, match.awayTeamZh);
+      const resultLine = matchResultLine(match, displayStatus, hasScore);
 
       return `
-        <article class="match-card">
+        <article class="match-card match-card-${displayStatus}">
           <div class="match-card-header">
-            <span class="group-name">${formatGroupName(match.group)}</span>
             <span class="status status-${displayStatus}">${STATUS_LABELS[displayStatus]}</span>
+            <span class="group-name">${formatGroupName(match.group)}</span>
           </div>
 
-          <div class="teams">
-            ${teamRow(match.homeTeamZh, match.homeTeam, hasScore ? match.homeScore : "-")}
-            ${teamRow(match.awayTeamZh, match.awayTeam, hasScore ? match.awayScore : "-")}
-          </div>
+          <h3 class="match-title">${homeName} <span>vs</span> ${awayName}</h3>
 
-          <p class="match-time">${formatBeijingTime(match.date)}</p>
-          <p class="match-location">${match.city} · ${match.stadium}</p>
+          <p class="match-highlight">${resultLine}</p>
+          <p class="match-location">
+            ${formatGroupName(match.group)} · ${match.city} · ${match.stadium}
+          </p>
 
           <div class="match-card-footer">
-            <span class="timezone-label">北京时间</span>
+            <span class="timezone-label">${formatBeijingDateTime(match.date)}</span>
             <button
               class="favorite-button ${isFavorite ? "active" : ""}"
               type="button"
@@ -459,15 +510,18 @@ function matchCardsHtml(matches) {
     .join("");
 }
 
-function teamRow(nameZh, name, score) {
-  return `
-    <div class="team-row">
-      <div class="team-name">
-        ${teamNameHtml(name, nameZh)}
-      </div>
-      <span class="score">${score}</span>
-    </div>
-  `;
+function matchResultLine(match, status, hasScore) {
+  if (status === "live") {
+    return hasScore
+      ? `进行中 · 当前比分 ${match.homeScore} - ${match.awayScore}`
+      : "进行中";
+  }
+  if (status === "finished") {
+    return hasScore
+      ? `${match.homeScore} - ${match.awayScore} · 已结束`
+      : "已结束";
+  }
+  return `未开始 · 北京时间 ${formatBeijingDateTime(match.date)}`;
 }
 
 function teamNameHtml(teamName, teamZhName) {
@@ -517,6 +571,58 @@ function normalizeStatus(status) {
   return status === "not_started" ? "upcoming" : status;
 }
 
+function sortMatchesByViewingPriority(matches) {
+  const statusOrder = { live: 0, upcoming: 1, finished: 2 };
+  return [...matches].sort((a, b) => {
+    const statusA = normalizeStatus(a.status);
+    const statusB = normalizeStatus(b.status);
+    const statusDifference =
+      (statusOrder[statusA] ?? 3) - (statusOrder[statusB] ?? 3);
+    if (statusDifference !== 0) return statusDifference;
+
+    const timeA = new Date(a.date).getTime();
+    const timeB = new Date(b.date).getTime();
+    if (statusA === "finished") return timeB - timeA;
+    return timeA - timeB;
+  });
+}
+
+function selectRecentMatches(matches) {
+  const now = new Date();
+  const todayKey = formatBeijingDateKey(now);
+  const todayMatches = matches.filter(
+    (match) => formatBeijingDateKey(match.date) === todayKey
+  );
+  if (todayMatches.length > 0) return todayMatches;
+
+  const sevenDays = 7 * 24 * 60 * 60 * 1000;
+  const recentWindow = matches.filter((match) => {
+    const difference = Math.abs(new Date(match.date).getTime() - now.getTime());
+    return difference <= sevenDays;
+  });
+  if (recentWindow.length > 0) {
+    return sortMatchesByViewingPriority(recentWindow).slice(0, 5);
+  }
+
+  return matches
+    .filter(
+      (match) =>
+        normalizeStatus(match.status) === "upcoming" &&
+        new Date(match.date).getTime() >= now.getTime()
+    )
+    .sort((a, b) => new Date(a.date) - new Date(b.date))
+    .slice(0, 5);
+}
+
+function formatBeijingDateKey(dateValue) {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Shanghai",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).format(new Date(dateValue));
+}
+
 function toggleFavoriteMatch(matchId) {
   matchId = String(matchId);
 
@@ -529,6 +635,7 @@ function toggleFavoriteMatch(matchId) {
   saveStoredArray(STORAGE_KEYS.favoriteMatches, state.favoriteMatches);
   renderMatches();
   renderFollowedMatches();
+  renderRecentMatches();
   renderFavoriteMatches();
 }
 
@@ -602,7 +709,7 @@ function renderStandings() {
         .map((match) => match.group)
         .filter((group) => /^[A-Z]$/.test(group))
     )
-  ].sort();
+  ].sort((a, b) => groupDisplayPriority(a) - groupDisplayPriority(b) || a.localeCompare(b));
 
   elements.standings.innerHTML = groups
     .map((group) => {
@@ -637,25 +744,42 @@ function renderStandings() {
     .join("");
 }
 
-function renderFilterSummary() {
+function groupDisplayPriority(group) {
+  const hasFinishedMatch = state.matches.some(
+    (match) =>
+      match.group === group &&
+      normalizeStatus(match.status) === "finished" &&
+      Number.isFinite(match.homeScore) &&
+      Number.isFinite(match.awayScore)
+  );
+  const hasFollowedTeam = state.teams.some(
+    (team) => team.group === group && state.followedTeams.includes(team.name)
+  );
+
+  if (hasFinishedMatch || hasFollowedTeam) return 0;
+  return 1;
+}
+
+function renderFilterSummary(visibleCount, totalCount) {
   const selectedTeam = state.teams.find(
     (team) => team.name === elements.teamFilter.value
   );
-  const teamLabel = selectedTeam ? selectedTeam.nameZh : "全部";
+  const teamLabel = selectedTeam
+    ? formatTeamDisplayName(selectedTeam.name, selectedTeam.nameZh)
+    : "全部球队";
   const groupLabel =
     elements.groupFilter.value === "all"
-      ? "全部"
+      ? "全部小组"
       : formatGroupName(elements.groupFilter.value);
   const statusLabel =
     elements.statusFilter.value === "all"
-      ? "全部"
+      ? "全部状态"
       : STATUS_LABELS[elements.statusFilter.value];
+  const followedLabel = state.followedOnly ? " / 只看关注球队" : "";
 
   elements.filterSummary.innerHTML = `
-    <span>当前球队：<strong>${teamLabel}</strong></span>
-    <span>当前小组：<strong>${groupLabel}</strong></span>
-    <span>当前状态：<strong>${statusLabel}</strong></span>
-    <span>关注筛选：<strong>${state.followedOnly ? "已开启" : "未开启"}</strong></span>
+    <span>当前筛选：<strong>${teamLabel} / ${groupLabel} / ${statusLabel}${followedLabel}</strong></span>
+    <span>当前显示：<strong>${visibleCount} 场比赛</strong>，筛选结果共 ${totalCount} 场</span>
   `;
 }
 
