@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build:cn": "node scripts/build-cn.js",
     "fetch:matches": "node scripts/fetch-matches.js"
   }
 }
