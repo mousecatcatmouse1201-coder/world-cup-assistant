@@ -8,7 +8,7 @@
       content="查看 2026 世界杯公开赛程、关注球队、收藏比赛并浏览小组积分榜。"
     />
     <title>2026 世界杯观赛助手</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=6" />
   </head>
   <body>
     <header class="site-header">
@@ -22,11 +22,41 @@
     </header>
 
     <main class="container page-content">
+      <div class="loading-message" id="loading-message" role="status">
+        正在加载比赛数据...
+      </div>
+      <div class="error-message" id="error-message" role="alert" hidden></div>
+
+      <section class="data-status-bar" aria-label="数据状态">
+        <div>
+          <span>数据来源</span>
+          <strong id="status-source">正在加载</strong>
+        </div>
+        <div>
+          <span>数据更新时间</span>
+          <strong id="status-updated-at">--</strong>
+        </div>
+        <div>
+          <span>比赛总数</span>
+          <strong id="status-match-count">--</strong>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="next-match-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">即将开赛</p>
+            <h2 id="next-match-title">下一场比赛</h2>
+          </div>
+        </div>
+        <div id="next-match"></div>
+      </section>
+
       <section class="section" aria-labelledby="followed-matches-title">
         <div class="section-heading">
           <div>
             <p class="section-label">首页</p>
-            <h2 id="followed-matches-title">我关注球队的比赛</h2>
+            <h2 id="followed-matches-title">我的关注比赛</h2>
           </div>
           <span class="count-badge" id="followed-match-count">0 场</span>
         </div>
@@ -39,7 +69,9 @@
             <p class="section-label">查找比赛</p>
             <h2 id="filter-title">赛程筛选</h2>
           </div>
-          <button class="text-button" id="reset-filters" type="button">重置筛选</button>
+          <button class="secondary-button" id="reset-filters" type="button">
+            一键清除筛选
+          </button>
         </div>
 
         <div class="filter-grid">
@@ -66,7 +98,17 @@
               <option value="finished">已结束</option>
             </select>
           </label>
+
+          <label class="followed-toggle">
+            <input id="followed-only-filter" type="checkbox" />
+            <span>
+              <strong>只看我关注球队</strong>
+              <small>根据“我的关注”选择筛选</small>
+            </span>
+          </label>
         </div>
+
+        <div class="filter-summary" id="filter-summary" aria-live="polite"></div>
       </section>
 
       <section class="section" aria-labelledby="all-matches-title">
@@ -78,7 +120,7 @@
           </div>
           <span class="count-badge" id="match-count">0 场</span>
         </div>
-        <div class="match-grid" id="all-matches"></div>
+        <div class="date-groups" id="all-matches"></div>
       </section>
 
       <section class="section" aria-labelledby="standings-title">
@@ -87,8 +129,10 @@
             <p class="section-label">数据</p>
             <h2 id="standings-title">小组积分榜</h2>
           </div>
-          <p class="section-note">根据已结束比赛自动计算</p>
         </div>
+        <p class="standings-description">
+          积分榜根据已结束且有比分的比赛自动计算
+        </p>
         <div class="standings-list" id="standings"></div>
       </section>
 
@@ -114,8 +158,6 @@
           </div>
         </div>
       </section>
-
-      <div class="error-message" id="error-message" role="alert" hidden></div>
     </main>
 
     <footer class="site-footer">

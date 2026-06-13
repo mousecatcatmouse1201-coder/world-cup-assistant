@@ -56,11 +56,17 @@ const STORAGE_KEYS = {
 const state = {
   matches: [],
   teams: [],
+  followedOnly: false,
   followedTeams: readStoredArray(STORAGE_KEYS.followedTeams),
   favoriteMatches: readStoredArray(STORAGE_KEYS.favoriteMatches).map(String)
 };
 
 const elements = {
+  loadingMessage: document.querySelector("#loading-message"),
+  statusSource: document.querySelector("#status-source"),
+  statusUpdatedAt: document.querySelector("#status-updated-at"),
+  statusMatchCount: document.querySelector("#status-match-count"),
+  nextMatch: document.querySelector("#next-match"),
   followedMatches: document.querySelector("#followed-matches"),
   followedMatchCount: document.querySelector("#followed-match-count"),
   allMatches: document.querySelector("#all-matches"),
@@ -71,6 +77,8 @@ const elements = {
   teamFilter: document.querySelector("#team-filter"),
   groupFilter: document.querySelector("#group-filter"),
   statusFilter: document.querySelector("#status-filter"),
+  followedOnlyFilter: document.querySelector("#followed-only-filter"),
+  filterSummary: document.querySelector("#filter-summary"),
   resetFilters: document.querySelector("#reset-filters"),
   dataSource: document.querySelector("#data-source"),
   errorMessage: document.querySelector("#error-message")
@@ -87,13 +95,15 @@ async function init() {
 
     state.matches = matchResult.matches;
     state.teams = mergeTeamsWithMatches(teams, state.matches);
-    elements.dataSource.textContent = `数据来源：${matchResult.sourceLabel}`;
+    updateDataStatus(matchResult);
     populateFilters();
     bindEvents();
     renderAll();
-  } catch (error) {
+    elements.loadingMessage.hidden = true;
+  } catch {
+    elements.loadingMessage.hidden = true;
     elements.errorMessage.hidden = false;
-    elements.errorMessage.textContent = `数据加载失败：${error.message}`;
+    elements.errorMessage.textContent = "比赛数据加载失败，请稍后再试";
   }
 }
 
@@ -116,7 +126,9 @@ async function loadMatches() {
 
       return {
         matches: data.matches,
-        sourceLabel: data.source === "local-json" ? "本地 JSON" : "本地缓存"
+        sourceLabel: "OpenFootball / 本地 JSON",
+        updatedAt: data.updatedAt || "",
+        usedFallback: false
       };
     } catch {
       // 普通静态服务器没有 /api/matches 时，继续读取本地 JSON。
@@ -124,7 +136,12 @@ async function loadMatches() {
   }
 
   const matches = await loadJson("data/matches.json", FALLBACK_MATCHES);
-  return { matches, sourceLabel: "本地缓存" };
+  return {
+    matches,
+    sourceLabel: "OpenFootball / 本地 JSON",
+    updatedAt: "",
+    usedFallback: true
+  };
 }
 
 async function loadJson(path, fallbackData) {
@@ -181,6 +198,17 @@ function saveStoredArray(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
+function updateDataStatus(matchResult) {
+  elements.statusSource.textContent = matchResult.sourceLabel;
+  elements.statusUpdatedAt.textContent = matchResult.updatedAt
+    ? formatBeijingDateTime(matchResult.updatedAt)
+    : "以本地文件为准";
+  elements.statusMatchCount.textContent = `${matchResult.matches.length} 场`;
+  elements.dataSource.textContent = matchResult.usedFallback
+    ? "已使用本地缓存数据"
+    : `数据来源：${matchResult.sourceLabel}`;
+}
+
 function populateFilters() {
   state.teams.forEach((team) => {
     const option = document.createElement("option");
@@ -202,11 +230,17 @@ function bindEvents() {
   elements.teamFilter.addEventListener("change", renderMatches);
   elements.groupFilter.addEventListener("change", renderMatches);
   elements.statusFilter.addEventListener("change", renderMatches);
+  elements.followedOnlyFilter.addEventListener("change", () => {
+    state.followedOnly = elements.followedOnlyFilter.checked;
+    renderMatches();
+  });
 
   elements.resetFilters.addEventListener("click", () => {
     elements.teamFilter.value = "all";
     elements.groupFilter.value = "all";
     elements.statusFilter.value = "all";
+    elements.followedOnlyFilter.checked = false;
+    state.followedOnly = false;
     renderMatches();
   });
 
@@ -225,6 +259,7 @@ function bindEvents() {
 }
 
 function renderAll() {
+  renderNextMatch();
   renderMatches();
   renderFollowedMatches();
   renderTeamButtons();
@@ -243,11 +278,16 @@ function renderMatches() {
     const matchesGroup = group === "all" || match.group === group;
     const matchesStatus =
       status === "all" || normalizeStatus(match.status) === status;
-    return matchesTeam && matchesGroup && matchesStatus;
+    const matchesFollowed =
+      !state.followedOnly ||
+      state.followedTeams.includes(match.homeTeam) ||
+      state.followedTeams.includes(match.awayTeam);
+    return matchesTeam && matchesGroup && matchesStatus && matchesFollowed;
   });
 
-  renderMatchCards(filteredMatches, elements.allMatches, "没有符合筛选条件的比赛。");
+  renderMatchesByDate(filteredMatches);
   elements.matchCount.textContent = `${filteredMatches.length} 场`;
+  renderFilterSummary();
 }
 
 function renderFollowedMatches() {
@@ -259,11 +299,80 @@ function renderFollowedMatches() {
 
   const emptyText =
     state.followedTeams.length === 0
-      ? "你还没有关注球队，请在“我的关注”区域选择球队。"
+      ? "你还没有关注球队，可以在下方选择球队"
       : "目前没有关注球队的比赛。";
 
   renderMatchCards(matches, elements.followedMatches, emptyText);
   elements.followedMatchCount.textContent = `${matches.length} 场`;
+}
+
+function renderNextMatch() {
+  const nextMatch = state.matches
+    .filter(
+      (match) =>
+        normalizeStatus(match.status) === "upcoming" &&
+        !Number.isNaN(new Date(match.date).getTime())
+    )
+    .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+
+  if (!nextMatch) {
+    elements.nextMatch.innerHTML =
+      '<div class="empty-state">暂无即将开始的比赛</div>';
+    return;
+  }
+
+  elements.nextMatch.innerHTML = `
+    <article class="next-match-card">
+      <div>
+        <span class="next-match-group">${formatGroupName(nextMatch.group)}</span>
+        <p class="next-match-time">${formatBeijingTime(nextMatch.date)}</p>
+        <p class="match-location">${nextMatch.city} · ${nextMatch.stadium}</p>
+      </div>
+      <div class="next-match-teams">
+        <div>
+          <strong>${nextMatch.homeTeamZh}</strong>
+          <span>${nextMatch.homeTeam}</span>
+        </div>
+        <b>VS</b>
+        <div>
+          <strong>${nextMatch.awayTeamZh}</strong>
+          <span>${nextMatch.awayTeam}</span>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function renderMatchesByDate(matches) {
+  if (matches.length === 0) {
+    elements.allMatches.innerHTML =
+      '<div class="empty-state">没有找到符合条件的比赛</div>';
+    return;
+  }
+
+  const sortedMatches = [...matches].sort(
+    (a, b) => new Date(a.date) - new Date(b.date)
+  );
+  const groups = new Map();
+
+  sortedMatches.forEach((match) => {
+    const dateLabel = formatBeijingDate(match.date);
+    if (!groups.has(dateLabel)) groups.set(dateLabel, []);
+    groups.get(dateLabel).push(match);
+  });
+
+  elements.allMatches.innerHTML = [...groups.entries()]
+    .map(
+      ([dateLabel, dateMatches]) => `
+        <section class="date-group">
+          <h3 class="date-heading">${dateLabel}</h3>
+          <div class="match-grid">
+            ${matchCardsHtml(dateMatches)}
+          </div>
+        </section>
+      `
+    )
+    .join("");
 }
 
 function renderMatchCards(matches, container, emptyText) {
@@ -272,7 +381,11 @@ function renderMatchCards(matches, container, emptyText) {
     return;
   }
 
-  container.innerHTML = matches
+  container.innerHTML = matchCardsHtml(matches);
+}
+
+function matchCardsHtml(matches) {
+  return matches
     .map((match) => {
       const matchId = String(match.id);
       const isFavorite = state.favoriteMatches.includes(matchId);
@@ -282,7 +395,7 @@ function renderMatchCards(matches, container, emptyText) {
       return `
         <article class="match-card">
           <div class="match-card-header">
-            <span class="group-name">${match.group} 组</span>
+            <span class="group-name">${formatGroupName(match.group)}</span>
             <span class="status status-${displayStatus}">${STATUS_LABELS[displayStatus]}</span>
           </div>
 
@@ -335,6 +448,31 @@ function formatBeijingTime(dateString) {
   }).format(new Date(dateString));
 }
 
+function formatBeijingDate(dateString) {
+  return new Intl.DateTimeFormat("zh-CN", {
+    timeZone: "Asia/Shanghai",
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  }).format(new Date(dateString));
+}
+
+function formatBeijingDateTime(dateString) {
+  return new Intl.DateTimeFormat("zh-CN", {
+    timeZone: "Asia/Shanghai",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  }).format(new Date(dateString));
+}
+
+function formatGroupName(group) {
+  return /^[A-Z]$/.test(group) ? `${group} 组` : group;
+}
+
 function normalizeStatus(status) {
   return status === "not_started" ? "upcoming" : status;
 }
@@ -364,6 +502,7 @@ function toggleFollowedTeam(teamName) {
   saveStoredArray(STORAGE_KEYS.followedTeams, state.followedTeams);
   renderTeamButtons();
   renderFollowedMatches();
+  if (state.followedOnly) renderMatches();
 }
 
 function renderTeamButtons() {
@@ -430,7 +569,7 @@ function renderStandings() {
       const rows = calculateGroupStandings(group);
       return `
         <article class="standings-card">
-          <h3>${group} 组</h3>
+          <h3>${group} 组积分榜</h3>
           <div class="table-scroll">
             <table>
               <thead>
@@ -456,6 +595,28 @@ function renderStandings() {
       `;
     })
     .join("");
+}
+
+function renderFilterSummary() {
+  const selectedTeam = state.teams.find(
+    (team) => team.name === elements.teamFilter.value
+  );
+  const teamLabel = selectedTeam ? selectedTeam.nameZh : "全部";
+  const groupLabel =
+    elements.groupFilter.value === "all"
+      ? "全部"
+      : formatGroupName(elements.groupFilter.value);
+  const statusLabel =
+    elements.statusFilter.value === "all"
+      ? "全部"
+      : STATUS_LABELS[elements.statusFilter.value];
+
+  elements.filterSummary.innerHTML = `
+    <span>当前球队：<strong>${teamLabel}</strong></span>
+    <span>当前小组：<strong>${groupLabel}</strong></span>
+    <span>当前状态：<strong>${statusLabel}</strong></span>
+    <span>关注筛选：<strong>${state.followedOnly ? "已开启" : "未开启"}</strong></span>
+  `;
 }
 
 function calculateGroupStandings(group) {
