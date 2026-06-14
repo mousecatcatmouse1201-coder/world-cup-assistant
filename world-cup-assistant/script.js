@@ -243,7 +243,7 @@ function updateDataStatus(matchResult) {
   elements.statusSource.textContent = matchResult.sourceLabel;
   elements.statusUpdatedAt.textContent = matchResult.updatedAt
     ? formatBeijingDateTime(matchResult.updatedAt)
-    : "以本地文件为准";
+    : "以数据文件为准";
   elements.statusMatchCount.textContent = `${matchResult.matches.length} 场`;
   elements.dataSource.textContent = matchResult.usedFallback
     ? "已使用本地缓存数据"
@@ -604,13 +604,20 @@ function selectRecentMatches(matches) {
     return sortMatchesByViewingPriority(recentWindow).slice(0, 5);
   }
 
-  return matches
+  const upcomingMatches = matches
     .filter(
       (match) =>
         normalizeStatus(match.status) === "upcoming" &&
         new Date(match.date).getTime() >= now.getTime()
     )
     .sort((a, b) => new Date(a.date) - new Date(b.date))
+    .slice(0, 5);
+
+  if (upcomingMatches.length > 0) return upcomingMatches;
+
+  return matches
+    .filter((match) => normalizeStatus(match.status) === "finished")
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 5);
 }
 
@@ -671,34 +678,56 @@ function renderTeamButtons() {
 }
 
 function renderFavoriteMatches() {
-  const matches = state.matches.filter((match) =>
-    state.favoriteMatches.includes(String(match.id))
+  const matches = sortMatchesByViewingPriority(
+    state.matches.filter((match) =>
+      state.favoriteMatches.includes(String(match.id))
+    )
   );
 
   if (matches.length === 0) {
-    elements.favoriteMatches.innerHTML =
-      '<p class="muted">还没有收藏比赛，可以在比赛卡片中点击“收藏比赛”。</p>';
+    elements.favoriteMatches.innerHTML = `
+      <div class="watchlist-empty">
+        <strong>你还没有收藏比赛</strong>
+        <span>点击比赛卡片上的收藏按钮，可以把想看的比赛加入观赛清单。</span>
+      </div>
+    `;
     return;
   }
 
   elements.favoriteMatches.innerHTML = matches
-    .map(
-      (match) => `
-        <div class="favorite-summary">
-          <div>
-            <p>${formatTeamDisplayName(match.homeTeam, match.homeTeamZh)} vs ${formatTeamDisplayName(match.awayTeam, match.awayTeamZh)}</p>
-            <span>${formatBeijingTime(match.date)} · 北京时间</span>
+    .map((match) => {
+      const status = normalizeStatus(match.status);
+      const hasScore = match.homeScore !== null && match.awayScore !== null;
+      const watchlistHighlight =
+        status === "upcoming"
+          ? "等待开赛"
+          : matchResultLine(match, status, hasScore);
+
+      return `
+        <article class="watchlist-item watchlist-item-${status}">
+          <div class="watchlist-content">
+            <div class="watchlist-meta">
+              <span class="status status-${status}">${STATUS_LABELS[status]}</span>
+              <span>${formatGroupName(match.group)}</span>
+            </div>
+            <h3>
+              ${formatTeamDisplayName(match.homeTeam, match.homeTeamZh)}
+              <span>vs</span>
+              ${formatTeamDisplayName(match.awayTeam, match.awayTeamZh)}
+            </h3>
+            <p>${watchlistHighlight}</p>
+            <small>北京时间 ${formatBeijingDateTime(match.date)}</small>
           </div>
           <button
-            class="text-button"
+            class="secondary-button watchlist-remove"
             type="button"
             data-favorite-match="${String(match.id)}"
           >
-            取消
+            取消收藏
           </button>
-        </div>
-      `
-    )
+        </article>
+      `;
+    })
     .join("");
 }
 

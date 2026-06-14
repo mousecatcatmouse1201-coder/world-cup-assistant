@@ -9,7 +9,7 @@
     />
     <meta name="deployment-mode" content="api-first" />
     <title>2026 世界杯观赛助手</title>
-    <link rel="stylesheet" href="style.css?v=12" />
+    <link rel="stylesheet" href="style.css?v=13" />
   </head>
   <body>
     <header class="site-header">
@@ -43,12 +43,26 @@
         </div>
         <div>
           <span>数据更新时间</span>
-          <strong id="status-updated-at">以本地文件为准</strong>
+          <strong id="status-updated-at">以数据文件为准</strong>
         </div>
       </section>
       <p class="data-disclaimer">
         数据来源：OpenFootball 公开数据，系统每日自动同步。赛程数据非实时比分，仅供观赛参考。
       </p>
+
+      <section class="section" aria-labelledby="recent-matches-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">观赛提示</p>
+            <h2 id="recent-matches-title">近期比赛</h2>
+            <p class="section-note">
+              优先显示今天、最近 7 天或接下来最近的比赛。
+            </p>
+          </div>
+          <span class="count-badge" id="recent-match-count">0 场</span>
+        </div>
+        <div class="match-grid" id="recent-matches"></div>
+      </section>
 
       <section
         class="section follow-team-panel"
@@ -79,18 +93,17 @@
         <div class="match-grid" id="followed-matches"></div>
       </section>
 
-      <section class="section" aria-labelledby="recent-matches-title">
+      <section class="section watchlist-section" aria-labelledby="favorites-title">
         <div class="section-heading">
           <div>
-            <p class="section-label">观赛提示</p>
-            <h2 id="recent-matches-title">近期比赛</h2>
-            <p class="section-note">
-              优先显示今天、最近 7 天或接下来最近的比赛。
-            </p>
+            <p class="section-label">想看的比赛</p>
+            <h2 id="favorites-title">我的观赛清单</h2>
           </div>
-          <span class="count-badge" id="recent-match-count">0 场</span>
+          <p class="section-note">收藏保存在当前浏览器</p>
         </div>
-        <div class="match-grid" id="recent-matches"></div>
+        <div class="card">
+          <div class="favorite-match-list" id="favorite-matches"></div>
+        </div>
       </section>
 
       <section class="section filter-panel" aria-labelledby="filter-title">
@@ -177,19 +190,6 @@
         <div class="standings-list" id="standings"></div>
       </section>
 
-      <section class="section" aria-labelledby="favorites-title">
-        <div class="section-heading">
-          <div>
-            <p class="section-label">本地保存</p>
-            <h2 id="favorites-title">收藏比赛</h2>
-          </div>
-          <p class="section-note">刷新页面后仍会保留</p>
-        </div>
-
-        <div class="card">
-          <div class="favorite-match-list" id="favorite-matches"></div>
-        </div>
-      </section>
     </main>
 
     <footer class="site-footer">
@@ -198,6 +198,6 @@
       </div>
     </footer>
 
-    <script src="script.js?v=12"></script>
+    <script src="script.js?v=13"></script>
   </body>
 </html>

@@ -523,28 +523,76 @@ tbody tr:last-child td {
 .favorite-match-list {
   display: grid;
   gap: 10px;
-  margin-top: 14px;
 }
 
-.favorite-summary {
+.watchlist-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 11px 12px;
+  gap: 18px;
+  padding: 16px;
   background: var(--surface-soft);
+  border-left: 4px solid var(--primary);
   border-radius: 10px;
 }
 
-.favorite-summary p {
-  margin: 0;
-  font-size: 0.9rem;
+.watchlist-item-live {
+  border-left-color: var(--live);
+}
+
+.watchlist-content {
+  min-width: 0;
+}
+
+.watchlist-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 7px;
+}
+
+.watchlist-meta > span:last-child {
+  color: var(--muted);
+  font-size: 0.78rem;
   font-weight: 700;
 }
 
-.favorite-summary span {
+.watchlist-item h3 {
+  margin: 0;
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.watchlist-item h3 span {
   color: var(--muted);
   font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.watchlist-item p {
+  margin: 6px 0 2px;
+  color: var(--primary-dark);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.watchlist-item small {
+  color: var(--muted);
+}
+
+.watchlist-remove {
+  flex: none;
+}
+
+.watchlist-empty {
+  display: grid;
+  gap: 4px;
+  padding: 8px 0;
+}
+
+.watchlist-empty span {
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .empty-state {
@@ -623,6 +671,15 @@ tbody tr:last-child td {
   }
 
   .secondary-button {
+    width: 100%;
+  }
+
+  .watchlist-item {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .watchlist-remove {
     width: 100%;
   }
 }
