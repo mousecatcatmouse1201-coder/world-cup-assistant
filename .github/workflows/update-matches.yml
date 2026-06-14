@@ -2,8 +2,16 @@ name: Update World Cup Matches
 
 on:
   workflow_dispatch:
+
   schedule:
     - cron: "0 1 * * *"
+
+  push:
+    branches:
+      - main
+    paths:
+      - "world-cup-assistant/**"
+      - ".github/workflows/update-matches.yml"
 
 permissions:
   contents: write
@@ -62,7 +70,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add world-cup-assistant/data/matches.json
-          git commit -m "chore: update world cup matches data from openfootball"
+          git commit -m "chore: update world cup matches data from openfootball [skip ci]"
           git push
 
       - name: Install CloudBase CLI
