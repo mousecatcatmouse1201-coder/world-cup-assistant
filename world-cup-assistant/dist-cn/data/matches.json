@@ -191,9 +191,9 @@
     "date": "2026-06-14T01:00:00.000Z",
     "stadium": "Boston (Foxborough)",
     "city": "Boston (Foxborough)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 0,
+    "awayScore": 1
   },
   {
     "id": "match-015",
@@ -275,9 +275,9 @@
     "date": "2026-06-14T04:00:00.000Z",
     "stadium": "Vancouver",
     "city": "Vancouver",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 2,
+    "awayScore": 0
   },
   {
     "id": "match-021",
@@ -345,9 +345,9 @@
     "date": "2026-06-14T17:00:00.000Z",
     "stadium": "Houston",
     "city": "Houston",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 7,
+    "awayScore": 1
   },
   {
     "id": "match-026",
@@ -359,9 +359,9 @@
     "date": "2026-06-14T23:00:00.000Z",
     "stadium": "Philadelphia",
     "city": "Philadelphia",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 1,
+    "awayScore": 0
   },
   {
     "id": "match-027",
@@ -429,9 +429,9 @@
     "date": "2026-06-14T20:00:00.000Z",
     "stadium": "Dallas (Arlington)",
     "city": "Dallas (Arlington)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 2,
+    "awayScore": 2
   },
   {
     "id": "match-032",
@@ -443,9 +443,9 @@
     "date": "2026-06-15T02:00:00.000Z",
     "stadium": "Monterrey (Guadalupe)",
     "city": "Monterrey (Guadalupe)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 5,
+    "awayScore": 1
   },
   {
     "id": "match-033",
@@ -513,9 +513,9 @@
     "date": "2026-06-15T19:00:00.000Z",
     "stadium": "Seattle",
     "city": "Seattle",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 1,
+    "awayScore": 1
   },
   {
     "id": "match-038",
@@ -527,9 +527,9 @@
     "date": "2026-06-16T01:00:00.000Z",
     "stadium": "Los Angeles (Inglewood)",
     "city": "Los Angeles (Inglewood)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 2,
+    "awayScore": 2
   },
   {
     "id": "match-039",
@@ -597,9 +597,9 @@
     "date": "2026-06-15T16:00:00.000Z",
     "stadium": "Atlanta",
     "city": "Atlanta",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 0,
+    "awayScore": 0
   },
   {
     "id": "match-044",
@@ -611,9 +611,9 @@
     "date": "2026-06-15T22:00:00.000Z",
     "stadium": "Miami (Miami Gardens)",
     "city": "Miami (Miami Gardens)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 1,
+    "awayScore": 1
   },
   {
     "id": "match-045",
@@ -681,9 +681,9 @@
     "date": "2026-06-16T19:00:00.000Z",
     "stadium": "New York/New Jersey (East Rutherford)",
     "city": "New York/New Jersey (East Rutherford)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 3,
+    "awayScore": 1
   },
   {
     "id": "match-050",
@@ -695,9 +695,9 @@
     "date": "2026-06-16T22:00:00.000Z",
     "stadium": "Boston (Foxborough)",
     "city": "Boston (Foxborough)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 1,
+    "awayScore": 4
   },
   {
     "id": "match-051",
@@ -765,9 +765,9 @@
     "date": "2026-06-17T01:00:00.000Z",
     "stadium": "Kansas City",
     "city": "Kansas City",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 3,
+    "awayScore": 0
   },
   {
     "id": "match-056",
@@ -779,9 +779,9 @@
     "date": "2026-06-17T04:00:00.000Z",
     "stadium": "San Francisco Bay Area (Santa Clara)",
     "city": "San Francisco Bay Area (Santa Clara)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 3,
+    "awayScore": 1
   },
   {
     "id": "match-057",
