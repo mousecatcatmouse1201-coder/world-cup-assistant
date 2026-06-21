@@ -373,9 +373,9 @@
     "date": "2026-06-20T20:00:00.000Z",
     "stadium": "Toronto",
     "city": "Toronto",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 2,
+    "awayScore": 1
   },
   {
     "id": "match-028",
@@ -387,9 +387,9 @@
     "date": "2026-06-21T00:00:00.000Z",
     "stadium": "Kansas City",
     "city": "Kansas City",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 0,
+    "awayScore": 0
   },
   {
     "id": "match-029",
@@ -457,9 +457,9 @@
     "date": "2026-06-20T17:00:00.000Z",
     "stadium": "Houston",
     "city": "Houston",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 5,
+    "awayScore": 1
   },
   {
     "id": "match-034",
@@ -471,9 +471,9 @@
     "date": "2026-06-21T04:00:00.000Z",
     "stadium": "Monterrey (Guadalupe)",
     "city": "Monterrey (Guadalupe)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 0,
+    "awayScore": 4
   },
   {
     "id": "match-035",
