@@ -541,9 +541,9 @@
     "date": "2026-06-21T19:00:00.000Z",
     "stadium": "Los Angeles (Inglewood)",
     "city": "Los Angeles (Inglewood)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 0,
+    "awayScore": 0
   },
   {
     "id": "match-040",
@@ -555,9 +555,9 @@
     "date": "2026-06-22T01:00:00.000Z",
     "stadium": "Vancouver",
     "city": "Vancouver",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 1,
+    "awayScore": 3
   },
   {
     "id": "match-041",
@@ -625,9 +625,9 @@
     "date": "2026-06-21T16:00:00.000Z",
     "stadium": "Atlanta",
     "city": "Atlanta",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 4,
+    "awayScore": 0
   },
   {
     "id": "match-046",
@@ -639,9 +639,9 @@
     "date": "2026-06-21T22:00:00.000Z",
     "stadium": "Miami (Miami Gardens)",
     "city": "Miami (Miami Gardens)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 2,
+    "awayScore": 2
   },
   {
     "id": "match-047",
@@ -1024,9 +1024,9 @@
   {
     "id": "match-074",
     "group": "Knockout",
-    "homeTeam": "1E",
+    "homeTeam": "Germany",
     "awayTeam": "3A/B/C/D/F",
-    "homeTeamZh": "",
+    "homeTeamZh": "德国",
     "awayTeamZh": "",
     "date": "2026-06-29T20:30:00.000Z",
     "stadium": "Boston (Foxborough)",
@@ -1094,9 +1094,9 @@
   {
     "id": "match-079",
     "group": "Knockout",
-    "homeTeam": "1A",
+    "homeTeam": "Mexico",
     "awayTeam": "3C/E/F/H/I",
-    "homeTeamZh": "",
+    "homeTeamZh": "墨西哥",
     "awayTeamZh": "",
     "date": "2026-07-01T01:00:00.000Z",
     "stadium": "Mexico City",
@@ -1122,9 +1122,9 @@
   {
     "id": "match-081",
     "group": "Knockout",
-    "homeTeam": "1D",
+    "homeTeam": "USA",
     "awayTeam": "3B/E/F/I/J",
-    "homeTeamZh": "",
+    "homeTeamZh": "美国",
     "awayTeamZh": "",
     "date": "2026-07-02T00:00:00.000Z",
     "stadium": "San Francisco Bay Area (Santa Clara)",
