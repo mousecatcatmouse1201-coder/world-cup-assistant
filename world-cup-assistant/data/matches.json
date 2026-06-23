@@ -709,9 +709,9 @@
     "date": "2026-06-22T21:00:00.000Z",
     "stadium": "Philadelphia",
     "city": "Philadelphia",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 3,
+    "awayScore": 0
   },
   {
     "id": "match-052",
@@ -723,9 +723,9 @@
     "date": "2026-06-23T00:00:00.000Z",
     "stadium": "New York/New Jersey (East Rutherford)",
     "city": "New York/New Jersey (East Rutherford)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 3,
+    "awayScore": 2
   },
   {
     "id": "match-053",
@@ -793,9 +793,9 @@
     "date": "2026-06-22T17:00:00.000Z",
     "stadium": "Dallas (Arlington)",
     "city": "Dallas (Arlington)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 2,
+    "awayScore": 0
   },
   {
     "id": "match-058",
@@ -807,9 +807,9 @@
     "date": "2026-06-23T03:00:00.000Z",
     "stadium": "San Francisco Bay Area (Santa Clara)",
     "city": "San Francisco Bay Area (Santa Clara)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 1,
+    "awayScore": 2
   },
   {
     "id": "match-059",
