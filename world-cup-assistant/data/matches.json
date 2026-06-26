@@ -317,9 +317,9 @@
     "date": "2026-06-26T02:00:00.000Z",
     "stadium": "Los Angeles (Inglewood)",
     "city": "Los Angeles (Inglewood)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 3,
+    "awayScore": 2
   },
   {
     "id": "match-024",
@@ -331,9 +331,9 @@
     "date": "2026-06-26T02:00:00.000Z",
     "stadium": "San Francisco Bay Area (Santa Clara)",
     "city": "San Francisco Bay Area (Santa Clara)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 0,
+    "awayScore": 0
   },
   {
     "id": "match-025",
@@ -401,9 +401,9 @@
     "date": "2026-06-25T20:00:00.000Z",
     "stadium": "Philadelphia",
     "city": "Philadelphia",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 0,
+    "awayScore": 2
   },
   {
     "id": "match-030",
@@ -415,9 +415,9 @@
     "date": "2026-06-25T20:00:00.000Z",
     "stadium": "New York/New Jersey (East Rutherford)",
     "city": "New York/New Jersey (East Rutherford)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 2,
+    "awayScore": 1
   },
   {
     "id": "match-031",
@@ -485,9 +485,9 @@
     "date": "2026-06-25T23:00:00.000Z",
     "stadium": "Dallas (Arlington)",
     "city": "Dallas (Arlington)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 1,
+    "awayScore": 1
   },
   {
     "id": "match-036",
@@ -499,9 +499,9 @@
     "date": "2026-06-25T23:00:00.000Z",
     "stadium": "Kansas City",
     "city": "Kansas City",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 1,
+    "awayScore": 3
   },
   {
     "id": "match-037",
@@ -1010,10 +1010,10 @@
   {
     "id": "match-073",
     "group": "Knockout",
-    "homeTeam": "2A",
-    "awayTeam": "2B",
-    "homeTeamZh": "",
-    "awayTeamZh": "",
+    "homeTeam": "South Africa",
+    "awayTeam": "Canada",
+    "homeTeamZh": "南非",
+    "awayTeamZh": "加拿大",
     "date": "2026-06-28T19:00:00.000Z",
     "stadium": "Los Angeles (Inglewood)",
     "city": "Los Angeles (Inglewood)",
@@ -1039,9 +1039,9 @@
     "id": "match-075",
     "group": "Knockout",
     "homeTeam": "1F",
-    "awayTeam": "2C",
+    "awayTeam": "Morocco",
     "homeTeamZh": "",
-    "awayTeamZh": "",
+    "awayTeamZh": "摩洛哥",
     "date": "2026-06-30T01:00:00.000Z",
     "stadium": "Monterrey (Guadalupe)",
     "city": "Monterrey (Guadalupe)",
@@ -1052,9 +1052,9 @@
   {
     "id": "match-076",
     "group": "Knockout",
-    "homeTeam": "1C",
+    "homeTeam": "Brazil",
     "awayTeam": "2F",
-    "homeTeamZh": "",
+    "homeTeamZh": "巴西",
     "awayTeamZh": "",
     "date": "2026-06-29T17:00:00.000Z",
     "stadium": "Houston",
@@ -1178,9 +1178,9 @@
   {
     "id": "match-085",
     "group": "Knockout",
-    "homeTeam": "1B",
+    "homeTeam": "Switzerland",
     "awayTeam": "3E/F/G/I/J",
-    "homeTeamZh": "",
+    "homeTeamZh": "瑞士",
     "awayTeamZh": "",
     "date": "2026-07-03T03:00:00.000Z",
     "stadium": "Vancouver",
