@@ -1073,9 +1073,9 @@
     "date": "2026-06-30T21:00:00.000Z",
     "stadium": "New York/New Jersey (East Rutherford)",
     "city": "New York/New Jersey (East Rutherford)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 3,
+    "awayScore": 0
   },
   {
     "id": "match-078",
@@ -1087,9 +1087,9 @@
     "date": "2026-06-30T17:00:00.000Z",
     "stadium": "Dallas (Arlington)",
     "city": "Dallas (Arlington)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 1,
+    "awayScore": 2
   },
   {
     "id": "match-079",
@@ -1101,9 +1101,9 @@
     "date": "2026-07-01T01:00:00.000Z",
     "stadium": "Mexico City",
     "city": "Mexico City",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 2,
+    "awayScore": 0
   },
   {
     "id": "match-080",
@@ -1234,10 +1234,10 @@
   {
     "id": "match-089",
     "group": "Knockout",
-    "homeTeam": "W74",
-    "awayTeam": "W77",
-    "homeTeamZh": "",
-    "awayTeamZh": "",
+    "homeTeam": "Paraguay",
+    "awayTeam": "France",
+    "homeTeamZh": "巴拉圭",
+    "awayTeamZh": "法国",
     "date": "2026-07-04T21:00:00.000Z",
     "stadium": "Philadelphia",
     "city": "Philadelphia",
@@ -1249,9 +1249,9 @@
     "id": "match-090",
     "group": "Knockout",
     "homeTeam": "Canada",
-    "awayTeam": "W75",
+    "awayTeam": "Morocco",
     "homeTeamZh": "加拿大",
-    "awayTeamZh": "",
+    "awayTeamZh": "摩洛哥",
     "date": "2026-07-04T17:00:00.000Z",
     "stadium": "Houston",
     "city": "Houston",
@@ -1262,10 +1262,10 @@
   {
     "id": "match-091",
     "group": "Knockout",
-    "homeTeam": "W76",
-    "awayTeam": "W78",
-    "homeTeamZh": "",
-    "awayTeamZh": "",
+    "homeTeam": "Brazil",
+    "awayTeam": "Norway",
+    "homeTeamZh": "巴西",
+    "awayTeamZh": "挪威",
     "date": "2026-07-05T20:00:00.000Z",
     "stadium": "New York/New Jersey (East Rutherford)",
     "city": "New York/New Jersey (East Rutherford)",
@@ -1276,9 +1276,9 @@
   {
     "id": "match-092",
     "group": "Knockout",
-    "homeTeam": "W79",
+    "homeTeam": "Mexico",
     "awayTeam": "W80",
-    "homeTeamZh": "",
+    "homeTeamZh": "墨西哥",
     "awayTeamZh": "",
     "date": "2026-07-06T00:00:00.000Z",
     "stadium": "Mexico City",
