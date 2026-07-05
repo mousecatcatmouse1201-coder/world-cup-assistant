@@ -1241,9 +1241,9 @@
     "date": "2026-07-04T21:00:00.000Z",
     "stadium": "Philadelphia",
     "city": "Philadelphia",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 0,
+    "awayScore": 1
   },
   {
     "id": "match-090",
@@ -1255,9 +1255,9 @@
     "date": "2026-07-04T17:00:00.000Z",
     "stadium": "Houston",
     "city": "Houston",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 0,
+    "awayScore": 3
   },
   {
     "id": "match-091",
@@ -1318,10 +1318,10 @@
   {
     "id": "match-095",
     "group": "Knockout",
-    "homeTeam": "W86",
-    "awayTeam": "W88",
-    "homeTeamZh": "",
-    "awayTeamZh": "",
+    "homeTeam": "Argentina",
+    "awayTeam": "Egypt",
+    "homeTeamZh": "阿根廷",
+    "awayTeamZh": "埃及",
     "date": "2026-07-07T16:00:00.000Z",
     "stadium": "Atlanta",
     "city": "Atlanta",
@@ -1333,9 +1333,9 @@
     "id": "match-096",
     "group": "Knockout",
     "homeTeam": "Switzerland",
-    "awayTeam": "W87",
+    "awayTeam": "Colombia",
     "homeTeamZh": "瑞士",
-    "awayTeamZh": "",
+    "awayTeamZh": "哥伦比亚",
     "date": "2026-07-07T20:00:00.000Z",
     "stadium": "Vancouver",
     "city": "Vancouver",
