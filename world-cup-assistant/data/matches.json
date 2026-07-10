@@ -1353,9 +1353,9 @@
     "date": "2026-07-09T20:00:00.000Z",
     "stadium": "Boston (Foxborough)",
     "city": "Boston (Foxborough)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 2,
+    "awayScore": 0
   },
   {
     "id": "match-098",
