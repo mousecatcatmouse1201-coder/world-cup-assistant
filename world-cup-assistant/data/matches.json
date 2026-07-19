@@ -1437,9 +1437,9 @@
     "date": "2026-07-18T21:00:00.000Z",
     "stadium": "Miami (Miami Gardens)",
     "city": "Miami (Miami Gardens)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 4,
+    "awayScore": 6
   },
   {
     "id": "match-104",
