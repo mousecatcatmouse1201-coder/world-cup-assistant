@@ -1451,8 +1451,8 @@
     "date": "2026-07-19T19:00:00.000Z",
     "stadium": "New York/New Jersey (East Rutherford)",
     "city": "New York/New Jersey (East Rutherford)",
-    "status": "not_started",
-    "homeScore": null,
-    "awayScore": null
+    "status": "finished",
+    "homeScore": 0,
+    "awayScore": 0
   }
 ]
